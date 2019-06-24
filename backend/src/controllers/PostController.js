@@ -24,8 +24,20 @@ module.exports = {
     },
 
     async listar(req, res) {
-        const pedidos = await Pedido.find();
+        const entregue = req.query.ent=='T' ? true : false
+        const ordem = req.query.ord=='D' ? 'desc' : 'asc'
+
+        const pedidos = await Pedido.find({ isEntregue: entregue }).sort({ cliente: ordem });
 
         return res.json(pedidos);
+    },
+
+    async entregar(req, res) {
+        const pedido = await Pedido.findById(req.params.id);
+        pedido.isEntregue = true;
+        await pedido.save();
+
+        return res.json(pedido);
+
     },
 }
