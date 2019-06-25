@@ -261,3 +261,43 @@ function App() {
 
 export default App;
 ```
+
+### Criando o cabeçalho (Header)
+
+Como dito antes, vamos criar um componete *Header*, ou cabeçalho, que aparecerá em qualquer página da aplicação. Começamos criando uma pasta `components`, dentro de `src`, para armazenar os componentes que serão utilizados em mais de um local. Isso garante a [escalabilidade](https://pt.wikipedia.org/wiki/Escalabilidade) da nossa aplicação.
+
+Dentro da pasta `components`, crie o arquivo `Header.js`. Esse componente será escrito em formato de função, com a estrutura básica abaixo:
+
+```js
+import React from 'react';
+
+import './Header.css';
+
+export default function Header() {
+    return(
+        <div />
+    );
+}
+```
+
+Iremos utilizar css para a estilização, então crie um arquivo `Header.css` dentro da pasta `components`.
+
+Substitua o `<div />` em `Header.js` pelo JSX abaixo:
+
+```js
+<header id="main-header">
+    <div className="header-content">
+        <img src="" alt="Appedidos" />
+        <img src="" alt="Criar publicação" />
+    </div>
+</header>
+```
+> O cabeçalho é formado por duas imagens: o logo (que, por hora, será apenas o nome da aplicação) e um símbolo de `+`, conforme o nosso design.
+
+A imagem do símbolo `+` foi reirada de [publicdomainvectors](https://publicdomainvectors.org/), digitando *plus* no campo de pesquisa. Faça o download da imagem e coloque dentro do novo diretório `assets` em `src`, com nome de `plus.svg`.
+
+> O reactJS aceita gráficos vetoriais (como o `svg`).
+
+```css
+
+```
