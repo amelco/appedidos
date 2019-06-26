@@ -1,4 +1,6 @@
-import React, { Component } from 'react';;
+import React, { Component } from 'react';
+
+import './Pedidos.css';
 
 class Pedido extends Component {
     render() {

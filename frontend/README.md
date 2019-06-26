@@ -119,18 +119,22 @@ Modifique o arquivo `global.css` para que contenha as seguintes definições de 
 
 ```css
 * {
-    margin: 0;
-    padding: 0;
-    outline: 0;
-    box-sizing: border-box;
+    margin: 0;                  /* tamanho das margens */
+    padding: 0;                 /* distância entre conteúdo e borda */
+    outline: 0;                 /* linha em torno da borda */
+    box-sizing: border-box;     /* junta padding e border */
 }
 
 body {
-    background: #fafafa;
-    font: 14px Arial, Helvetica, sans-serif;
-    -webkit-font-smoothing: antialiased !important;
+    background: #fafafa;                            /* cor de fundo */
+    font: 14px Arial, Helvetica, sans-serif;        /* estilo da fonte */
+    -webkit-font-smoothing: antialiased !important; /* suaviza a fonte */
 }
 ```
+
+> Não irei explicar a linguagem de estilos `css` porque não é o intuito desse manual. Caso você não saiba o que está acontecendo no código acima, aconselho que pesquise sobre [modelo de caixa do css](https://developer.mozilla.org/pt-BR/docs/Web/CSS/box_model) como um começo.
+
+> Apesar disso, adicionei comentários para explicar minimamente o que cada linha faz.
 
 ### Rotas
 
@@ -280,11 +284,9 @@ export default function Header() {
 }
 ```
 
-Iremos utilizar css para a estilização, então crie um arquivo `Header.css` dentro da pasta `components`.
+Iremos utilizar css para a estilização, então crie um arquivo `Header.css` dentro da pasta `components`. Deixemos o arquivo vazio por enquanto.
 
-Substitua o `<div />` em `Header.js` pelo JSX abaixo:
-
-```js
+```html
 <header id="main-header">
     <div className="header-content">
         <img src="" alt="Appedidos" />
@@ -294,10 +296,114 @@ Substitua o `<div />` em `Header.js` pelo JSX abaixo:
 ```
 > O cabeçalho é formado por duas imagens: o logo (que, por hora, será apenas o nome da aplicação) e um símbolo de `+`, conforme o nosso design.
 
-A imagem do símbolo `+` foi reirada de [publicdomainvectors](https://publicdomainvectors.org/), digitando *plus* no campo de pesquisa. Faça o download da imagem e coloque dentro do novo diretório `assets` em `src`, com nome de `plus.svg`.
+A imagem do símbolo `+` foi reirada de [publicdomainvectors](https://publicdomainvectors.org/), digitando *plus* no campo de pesquisa. Faça o download de duas imagens `svg` para representar a logo e o sinal `+` (ou crie você mesmo) e coloque dentro do novo diretório `assets` em `src`, com  os nomes de `logo.svg` e `plus.svg`.
 
-> O reactJS aceita gráficos vetoriais (como o `svg`).
+> O reactJS aceita figuras bitmaps (`png`, `jpg`) e vetoriais (como o `svg`).
+
+Modifique o arquivo `Header.js` para importar as imagens e colocá-las no JSX:
+
+```js
+import React from 'react';
+
+import './Header.css';
+import logo from '../assets/logo.svg';
+import plus from '../assets/plus.svg';
+
+export default function Header() {
+    return(
+        <header id="main-header">
+            <div className="header-content">
+                <img src={logo} alt="Appedidos" />
+                <img src={plus} alt="Criar publicação" />
+            </div>
+        </header>
+    );
+}
+```
+
+> Para colocar um código javascript dentro do html, insira o código entre chaves.
+
+Para visualizarmos o cabeçalho, precisamos importar o Header no arquivo `App.js` e adicioná-lo junto com as rotas
+
+```js
+...
+import Routes from './routes';
+import Header from './components/Header';
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Header />
+      <Routes />
+    </BrowserRouter>
+  );
+}
+...
+```
+
+Você deverá visualizar o resultado no navegador após salvar os arquivos.
+
+![cabecalho](res1.png "Cabeçalho")
+
+Vamos adicionar a estilização. Modifique o `Header.css`.
 
 ```css
+header#main-header {                    /* cabeçalho geral */
+    background: #fff;                   /* cor de fundo */
+    height: 72px;                       /* altura */
+    border-bottom: solid 1px #ddd;      /* borda inferior com 1 pixel de largura */
+}
+
+header#main-header .header-content {    /* conteúdo do cabeçalho */
+    width: 100%;                        /* largura ocupa 100% da área */
+    max-width: 980px;                   /* largura (área) máxima */
+    margin: 0 auto;                     /* centralizar */
+    height: 72px;                       /* altura igual a do cabeçalho geral */
+    padding: 0 30px;                    /* distância entre conteúdo e borda */
+
+     display: flex;                     /* outras opções de alinhamento */
+     align-items: center;               /* centraliza verticalmente */
+     justify-content: space-between;    /* alinha um item à esq. e outro à dir. */
+}
 
 ```
+
+Após salvar o `css`, a visualização será esta:
+
+![header_estilizado](header1.png "Cabeçalho estilizado")
+
+Vamos adicionar links às imagens de forma que a logo nos leve à página de pedidos e o `+` nos leve à página para criar um novo pedido. Para isso, devemos importar o componente `Link` do `react-router-dom` modificando o `Header.js`:
+
+```js
+import React from 'react';
+import { Link } from 'react-router-dom';
+...
+```
+
+O componente `Link` serve como a *âncora* (ou *anchor*), mais conhecida como a tag `<a>` do html e seu uso é bem semelhante: coloque a tag JSX `<Link></Link>`em torno do conteúdo que se deseja linkar e adicione a propriedade `to=''` como sendo o `href=''`, ou seja, qual a página que se deseja ir.
+
+Modifique o arquivo `Header.js` para adicionar os links:
+
+```jsx
+...
+<div className="header-content">
+    <Link to='/'>
+        <img src={logo} alt="Appedidos" />
+    </Link>
+    <Link to='/New'>
+        <img src={plus} alt="Criar publicação" />
+    </Link>
+</div>
+...
+```
+
+Após salvar, os links devem funcionar.
+
+### Criando a página Pedidos
+
+Acho que a partir desse momento, já sabemos como importar arquivos dentro de outros. Vimos vários exemplos disso até aqui. Portanto não vou mais apresentar o código que deve ser inserido.
+
+Vamos criar um arquivo de estilização (`css`) para a nossa página de listar os pedidos. Crie um arquivo `Pedidos.css` dentro de `pages` e importe esse arquivo dentro de `Pedidos.js`. Novamente, vamos deixar o arquivo `css` vazio por enquanto.
+
+Nessa página, nós iremos pegar os dados retornados pelo nosso *backend* feito em nodeJS e exibi-los.
+
