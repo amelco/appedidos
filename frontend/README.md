@@ -405,5 +405,304 @@ Acho que a partir desse momento, já sabemos como importar arquivos dentro de ou
 
 Vamos criar um arquivo de estilização (`css`) para a nossa página de listar os pedidos. Crie um arquivo `Pedidos.css` dentro de `pages` e importe esse arquivo dentro de `Pedidos.js`. Novamente, vamos deixar o arquivo `css` vazio por enquanto.
 
-Nessa página, nós iremos pegar os dados retornados pelo nosso *backend* feito em nodeJS e exibi-los.
+Nessa página, nós iremos pegar os dados retornados pelo nosso *backend* feito em nodeJS e exibi-los. Entretanto, antes de fazer isso, vamos criar uma página estática, com dados arbitrários, que represente a *estrutura* e o *estilo* que queremos dar à nossa página, inserindo código `html` e `css`. Em programação, pode-se chamar isso de *hardcoding*.
 
+Modifique, então, o arquivo pedidos:
+
+```jsx
+...
+return (
+    <section id='lista-pedidos'>
+        <article>
+            <header>
+                <div className='user-info'>
+                    <span>Andre Herman</span>
+                </div>
+            </header>
+            <div className='pedido'>
+                <span>Produto Teste</span>
+                <span className='data-entrega'>Data de entrega: 29/06/2019</span>
+            </div>
+            <footer>
+                <img src={check} alt="Entregue" />
+            </footer>
+        </article>
+        <article>
+            <header>
+                <div className='user-info'>
+                    <span>Andre Herman</span>
+                </div>
+            </header>
+            <div className='pedido'>
+                <span>Produto Teste</span>
+                <span className='data-entrega'>Data de entrega: 29/06/2019</span>
+            </div>
+            <footer>
+                <img src={check} alt="Entregue" />
+            </footer>
+        </article>
+    </section>
+    );
+...
+```
+
+> Criamos uma seção `<section>` que contém a lista de pedidos. Dentro dela, poderá haver vários `<article>`, sendo cada um deles, um pedido individual.
+
+> O pedido tem um cabeçalho `<header>` com as informações do usuário (por enquanto é só o nome mas, no futuro, pode haver outros dados como telefone, endereço e uma foto). Inserimos um `<span>` com o nome do usuário (para adicionar outro dado basta adicionar outro `<span>`).
+
+> O corpo do pedido, ou seja, as informações do pedido em si, foi colocado dentro de uma `<div>` com um `<span>` para o nome do produto e outro para a data de entrega.
+
+> Por fim, o *card* do pedido tem um rodapé (`<footer>`) que, por enquanto, armazenará apenas uma imagem de um *check* para o vendendor clicar quando o pedido tiver sido entregue.
+
+Foi colocado dois `<article>` exatamente iguais  para representar 2 pedidos. Assim podemos visualizar melhor a estilização quando estivermos preparando o `css`.
+
+Abaixo está o arquivo `Pedidos.css` na íntegra. Sugiro que, a cada linha inserida, se vá verificando o resultado. Dessa forma se consegue perceber o que cada elemento faz.
+
+```css
+section#lista-pedidos {
+    width: 100%;
+    max-width: 580px;
+    margin: 0 auto;
+    padding: 0 30px;
+
+}
+
+section#lista-pedidos article {
+    margin-top: 30px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: #fff;
+    padding: 20px;
+
+}
+
+section#lista-pedidos article header {
+    border-bottom: 1px solid #ddd;
+}
+
+section#lista-pedidos article header .user-info {
+    font-size: 20px;
+}
+
+section#lista-pedidos article .pedido {
+    margin-top: 10px;
+    font-size: 22px;
+
+    display: flex;
+    flex-direction: column;
+}
+
+section#lista-pedidos article .pedido .data-entrega {
+    margin-top: 10px;
+    font-size: 15px;
+    color: #ff6347;
+}
+
+section#lista-pedidos article footer {
+    margin-top: 10px;
+    margin-bottom: 30px;
+}
+
+section#lista-pedidos article footer img {
+    float: right;
+}
+```
+
+O resultado final é mostrado abaixo:
+
+![Pedidos](pedidos.png "Resultado da estilização da página de pedidos")
+
+### Carregando informações do *backend*
+
+Precisamos de uma biblioteca (ou pacote) para podermos receber os dados do nosso *backend*. Existem várias bibliotecas que podem fazer isso. Vamos utilizar a `axios`. Execute:
+
+```bash
+$ yarn add axios
+```
+
+Para manter a organização de nossa aplicação, vamos criar uma pasta, para guardar a comunicação com o api do *backend*, chamada `services` e o arquivo `api.js` dentro dela.
+
+Insira o seguinte código em `api.js`:
+
+```js
+import axios from 'axios';
+
+const api = axios.create({
+    baseURL: 'http://localhost:3333',
+});
+
+export default api;
+```
+
+> O código importa o pacote axios e cria uma variável `api` que vai armazenar o conteúdo de retorno do método create (um objeto, com métodos e prorpiedades), definindo um url base, ou seja, o caminho que será comum às requisições da api. Esse é o caminho em que nosso *backend* está ouvindo.
+
+De volta ao arquivo `Pedidos.js`, importamos a variável api que criamos.
+
+```js
+...
+import api from '../services/api';
+...
+```
+
+Agora vamos explicar porque escolhemos criar o componente `Pedidos.js` em um formato de classe.
+
+Os dados da api, ou seja, do nosso *backend*, precisa ser carregado antes de ser exibido na página. Um componente em forma de classe possui um método chamado `componentDidMount()` que é executado sempre que o componente for montado em tela. Assim, esse componente é um ótimo lugar para carregarmos as informações de nossa api.
+
+Nossa variável-objeto `api` tem um método `get()` que faz requisições do tipo GET e outro `post()` que faz requisições do tipo POST (duh). Vamos usar esses métodos para carregar os dados do mongoDB de maneira parecida que estávamos fazendo com o Insomnia.
+
+Insira em `Pedidos.js`:
+
+```js
+...
+import './Pedidos.css';
+
+class Pedido extends Component {
+
+    async componentDidMount() {
+        const response = await api.get('listPedidos');
+    }
+
+    render() {
+...
+```
+
+> O objeto `response` conterá uma propriedade `data` com todos os dados do nosso pedido, caso o método `get()` tenha sido bem-sucedido.
+
+No React, quando precisamos armazenar dados em um componente em que suas alterações serão refletidas em outros locais do componente, precisa-se se criar uma variável de estado (`state`). Iremos inicializar ela com um array vazio. Depois vamos utilizar a função `setState()` do React para passar os valores da variável response.data` para `pedidos`.
+
+Modifique `Pedidos.js` para:
+
+```js
+import React, { Component } from 'react';
+import api from '../services/api';
+
+import './Pedidos.css';
+
+class Pedido extends Component {
+
+    state = {
+        pedidos: [],
+    }
+
+    async componentDidMount() {
+        const response = await api.get('listPedidos');
+    }
+...
+```
+
+> Como `state` é um estado, devemos utilizar `this.setState({feed: response.data})` ao invés de algo como `this.state.pedidos = response.data`. No React, é assim que se faz (como disse, ainda estou aprendendo. Não sei explicar ao certo o porquê).
+
+O que devemos fazer agora é **percorrer** todos os pedidos retornados pela API e gerar um `<article>`. No momento, os articles estão fixos. Para isso, nós iremos utilizar javascript dentro do HTML, então devemos colocar o código javascript dentro de chaves `{}`.
+
+Para percorrer os elementos do array, usaremos a função `map()`. Ela chama a função de [*callback*](https://developer.mozilla.org/pt-BR/docs/Glossario/Callback_function) para cada elemento do array. A *callback* será definida como uma [arrow function](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Functions/Arrow_functions) (função flecha).
+
+Nossa *callback* function é uma função anônima que recebe uma variável `pedido` como argumento e retorna um HTML. O HTML que ele irá retornar é exatamente o que criamos anteriormente.
+
+Com as modificações acima, nosso arquivo `Pedidos.js` fica da seguinte forma:
+
+```jsx
+import React, { Component } from 'react';
+import api from '../services/api';
+
+import './Pedidos.css';
+
+class Pedido extends Component {
+
+    state = {
+        pedidos: [],
+    }
+
+    async componentDidMount() {
+        const response = await api.get('listPedidos');
+
+        this.setState({ pedidos: response.data });
+    }
+
+    render() {
+        return (
+            <section id='lista-pedidos'>
+                { this.state.pedidos.map(pedido => (
+                    <article>
+                        <header>
+                            <div className='user-info'>
+                                <span>Andre Herman</span>
+                            </div>
+                        </header>
+                        <div className='pedido'>
+                            <span>Produto Teste</span>
+                            <span className='data-entrega'>Data de entrega: 29/06/2019</span>
+                        </div>
+                        <footer>
+                            <img src={check} alt="Entregue" />
+                        </footer>
+                    </article>
+
+                )) }
+            </section>
+        );
+    }
+}
+
+export default Pedido;
+```
+
+Agora é só substituir os dados que estão fixos pelos dados retornados pela API através da variável `pedido`. Por exemplo, o nome do cliente `Andre Herman` é pra ser substituído por `{pedido.cliente}` (entre chaves porque é javascript dentro de HTML). A variável `cliente` em `pedido` é aquela que foi definida no *backend*.
+
+Após a substituição de todos os elementos dos pedidos, `Pedidos.js` fica:
+
+```jsx
+...
+return (
+            <section id='lista-pedidos'>
+                <h1>TEST</h1>
+                { this.state.pedidos.map(pedido => (
+                    <article>
+                        <header>
+                            <div className='user-info'>
+                                <span>{pedido.cliente}</span>
+                            </div>
+                        </header>
+                        <div className='pedido'>
+                            <span>{pedido.produto}</span>
+                            <span className='data-entrega'>Data de entrega: {pedido.entrega}</span>
+                        </div>
+                        <footer>
+                            <img src={check} alt="Entregue" />
+                        </footer>
+                    </article>
+                    ))
+                }
+            </section>
+        );
+...
+```
+
+<hr>
+
+#### Verificação de erros
+
+Se, após inserir as modificações, os pedidos não estiverem sendo carregados, abra o console javascript do navegador para ver algum possível erro. Para isso, clique com o botão direito do mouse na página e escolha a opção `Inspecionar`. Clique na aba `Console` veja se um erro com algo similar a isso apareceu:
+
+```
+Access to XMLHttpRequest at 'http://localhost:3333' from origin
+'http://localhost:3000' has been blocked by CORS policy: Request header field
+access-control-allow-origin is not allowed by Access-Control-Allow-Headers in
+preflight response.
+```
+
+Se sim, insira o seguinte no arquivo `index.js` da pasta `backend`:
+
+```js
+...
+const app = express();
+
+// Soluciona erro relacionado com CORS
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
+...
+```
+
+<hr>
