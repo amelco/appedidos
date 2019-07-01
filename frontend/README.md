@@ -1,3 +1,5 @@
+[TOC]
+
 # Pequeno manual introdutório do ReactJS
 
 Dando continuidade à construção da aplicação **appedidos**, vamos construir o nosso *frontend* utilizando ReactJS.
@@ -683,12 +685,7 @@ return (
 
 Se, após inserir as modificações, os pedidos não estiverem sendo carregados, abra o console javascript do navegador para ver algum possível erro. Para isso, clique com o botão direito do mouse na página e escolha a opção `Inspecionar`. Clique na aba `Console` veja se um erro com algo similar a isso apareceu:
 
-```
-Access to XMLHttpRequest at 'http://localhost:3333' from origin
-'http://localhost:3000' has been blocked by CORS policy: Request header field
-access-control-allow-origin is not allowed by Access-Control-Allow-Headers in
-preflight response.
-```
+![error_cors](cors.png)
 
 Se sim, insira o seguinte no arquivo `index.js` da pasta `backend`:
 

@@ -1,3 +1,10 @@
+section div#sort-list {
+    background: #eee;
+
+    display: flex;
+    justify-content: flex-end;
+}
+
 section#lista-pedidos {
     width: 100%;
     max-width: 580px;
