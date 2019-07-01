@@ -80,7 +80,7 @@ $ yarn dev
 
 * No browser, acesse [http://localhost:3333](http://localhost:3333) para visualizar a aplicação.
 
-Para a escalabilidade do app, é interessante lidar com as rotas em um local específico. Crie um arquivo `routes.js` e adicione o código:
+Para a [escalabilidade](https://pt.wikipedia.org/wiki/Escalabilidade) do app, é interessante lidar com as rotas em um local específico. Crie um arquivo `routes.js` e adicione o código:
 
 ```js
 const express = require('express');
