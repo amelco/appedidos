@@ -40,4 +40,12 @@ module.exports = {
         return res.json(pedido);
 
     },
+
+    async deletar(req, res) {
+        const pedido = await Pedido.findById(req.params.id);
+        console.log(pedido._id);
+        await pedido.remove();
+        return res.json(pedido);
+
+    },
 }

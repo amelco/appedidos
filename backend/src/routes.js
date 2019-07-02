@@ -8,5 +8,6 @@ routes.get('/', PostController.index);
 routes.post('/addPedido', PostController.adicionar);
 routes.get('/listPedidos', PostController.listar);
 routes.post('/listPedidos/:id/entregar', PostController.entregar);
+routes.post('/listPedidos/:id/deletar', PostController.deletar);
 
 module.exports = routes;
