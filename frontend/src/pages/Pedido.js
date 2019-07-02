@@ -9,7 +9,6 @@ class Pedido extends Component {
     state = {
         pedidos: [],
     }
-    // console.log();
 
     async componentDidMount() {
         const response = await api.get('listPedidos');
@@ -17,16 +16,10 @@ class Pedido extends Component {
         this.setState({ pedidos: response.data });
     }
 
-    async handleEntregue() {
-
-    }
-
     render() {
         return (
             <section id='lista-pedidos'>
                 <div id='sort-list'>
-                    <button type="button" onclick={this.handleOrder}>A-Z</button>
-                    <button type="button" onclick={this.handleEntregue}>Entregue</button>
                 </div>
                 { this.state.pedidos.map(pedido => (
                     <article key={pedido._id}>

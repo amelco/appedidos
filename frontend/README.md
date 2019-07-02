@@ -658,7 +658,7 @@ return (
             <section id='lista-pedidos'>
                 <h1>TEST</h1>
                 { this.state.pedidos.map(pedido => (
-                    <article>
+                    <article key={pedido._id}>
                         <header>
                             <div className='user-info'>
                                 <span>{pedido.cliente}</span>
@@ -678,6 +678,8 @@ return (
         );
 ...
 ```
+
+> Note que foi adicionado uma chave com o id do pedido na tag `article` (`key={pedido._id}`). Sempre que a função `map()` for utilizada, é aconselhável adicionar um campo único que identifique cada elemento do array a ser percorrido. Isso faz com que o dado seja encontrado mais rapidamente no banco de dados.
 
 <hr>
 
@@ -703,3 +705,172 @@ app.use(function(req, res, next) {
 ```
 
 <hr>
+
+### Criando a página de Novo Pedido
+
+Vamos começar montando nosso formulário em `New.js`. Modifique o arquivo `New.js`:
+
+```jsx
+...
+const today = new Date();
+const data = today.getDate()+'/'+today.getMonth()+'/'+today.getFullYear();
+
+class New extends Component {
+    render() {
+        return (
+            <form id="novo-pedido">
+                <input
+                  type="text"
+                  name="cliente"
+                  placeholder="Nome do cliente" />
+                <input
+                  type="text"
+                  name="produto"
+                  placeholder="Nome do produto" />
+                <input
+                  type="text"
+                  name="entrega"
+                  placeholder={`Data de entrega ex.(${data})`} />
+            </form>
+        );
+    }
+}
+...
+```
+
+Agora vamos adicionar a página de estilos `New.css`:
+
+```css
+form#novo-pedido {
+  width: 100%;
+  max-width: 580px;
+  margin: 30px auto 0;
+  padding: 30px;
+  background: #fff;
+  border: 1px solid #ddd;
+
+  display: flex;
+  flex-direction: column;
+}
+
+form#novo-pedido input {
+  margin-bottom: 10px;
+  height: 38px;
+  border-radius: 4px;
+  padding: 0 20px;
+  font-size: 14px;
+}
+
+form#novo-pedido button {
+  padding: 10px 20px;
+  border-radius: 4px;
+  border: 0;
+  background: #ff6347;
+  color: #fff;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+}
+```
+
+Importe `New.css` no arquivo `New.js` e você terá a página conforme a figura abaixo.
+
+![novo_pedido](novo.png "Página de Novo Pedido")
+
+#### Armazenando dados do formuário
+
+No React, uma maneira comum de pegar dados do formulário html é armazená-los conforme o usuário vai digitando. Para isso, cria-se uma variável de estado (`state`) com os campos vazios dentro do componente:
+
+```jsx
+...
+class New extends Component {
+
+  state = {
+    cliente: '',
+    produto: '',
+    entrega: '',
+    isEntregue: false,
+  };
+
+  render() {
+...
+```
+
+Através de uma função (a chamaremos de `handleChange()`), os dados irão sendo armazenados. Essa função usa como argumento os eventos (`e`) do html. Essa fução será uma *arrow function* para podermos ter acesso ao *this*.
+
+```jsx
+...
+state = {
+  cliente: '',
+  produto: '',
+  entrega: '',
+};
+
+handleChange = e => {
+  this.setState({ [e.target.name]: e.target.value });
+}
+...
+```
+
+> A variável (`target.name`) terá o valor do que está digitado em cada input (`target.value`).
+
+Agora, chamamos a função para cada input, no método *onChange()* e igualar o valor à sua respectiva variável de estado:
+
+```jsx
+<form id="novo-pedido">
+  <input
+    type="text"
+    name="cliente"
+    placeholder="Nome do cliente"
+    onChange={this.handleChange}
+    value={this.state.cliente} />
+  <input
+    type="text"
+    name="produto"
+    placeholder="Nome do produto"
+    onChange={this.handleChange}
+    value={this.state.produto} />
+  <input
+    type="text"
+    name="entrega"
+    placeholder={`Data de entrega ex.(${data})`}
+    onChange={this.handleChange}
+    value={this.state.entrega} />
+  <button type="submit">Enviar</button>
+</form>
+```
+
+Criaremos uma função (`handleSubmit()`) que será chamada quando apertamos o botão `Enviar` e a chamaremos no evento `onSubmit` do `form`.
+
+```js
+...
+handleChange = e => {
+    this.setState({ [e.target.name]: [e.target.value] });
+}
+
+handleSubmit = e => {
+    e.preventDefault();
+
+    console.log(this.state)
+}
+
+render() {
+  return (
+    <form id="novo-pedido" onSubmit={this.handleSubmit}>
+      <input
+...
+```
+> O método `e.preventDefault()` serve para prevenir o carregamento automático da página quando o formulário é submetido, vitando assim perder os dados armazenados na variável `state`.
+
+No navegador abra o `console` (clique direito do mouse -> Inspect -> aba Consolse), preencha o formulário e verifique a saída. Você deverá ver a variável `state` e seu conteúdo, que são os dados do formulário.
+
+Temos um objeto pronto pra ser salvo no banco de dados Mongo.
+
+#### Armazenando no BD Mongo
+
+A API será utilizada então devemos importar o arquivo `service/api.js` no arquivo `New.js`.
+
+```js
+import api from '../services/api';
+```
+
