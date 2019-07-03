@@ -29,7 +29,7 @@ class New extends Component {
         data.append('produto', this.state.produto);
         data.append('entrega', this.state.entrega);
 
-        await api.post('addPedido', data); 
+        await api.post('addPedido', data);
         // .then((result) => {
         //     // Do somthing
         //     console.log(data);
