@@ -16,6 +16,13 @@ class Pedido extends Component {
         this.setState({ pedidos: response.data });
     }
 
+    async handleEntrega(idPedido) {
+        const rota = `/listPedidos/${idPedido}/entregar`;
+        
+        await this.props.history.push(rota);        
+        await this.props.history.push('/');
+    }
+
     render() {
         return (
             <section id='lista-pedidos'>
@@ -33,7 +40,7 @@ class Pedido extends Component {
                             <span className='data-entrega'>Data de entrega: {pedido.entrega}</span>
                         </div>
                         <footer>
-                            <img src={check} alt="Entregue" />
+                            <img src={check} alt="Entregue" onClick={() => this.handleEntrega(pedido._id)} />
                         </footer>
                     </article>
                     ))

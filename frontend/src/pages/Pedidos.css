@@ -51,4 +51,5 @@ section#lista-pedidos article footer {
 
 section#lista-pedidos article footer img {
     float: right;
+    cursor: pointer;
 }
