@@ -17,10 +17,7 @@ class Pedido extends Component {
     }
 
     async handleEntrega(idPedido) {
-        const rota = `/listPedidos/${idPedido}/entregar`;
-        
-        await this.props.history.push(rota);        
-        await this.props.history.push('/');
+        api.post(`/listPedidos/${idPedido}/entregar`);
     }
 
     render() {
