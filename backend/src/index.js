@@ -10,9 +10,15 @@ app.use(function(req, res, next) {
     next();
 });
 
-mongoose.connect('mongodb://localhost:27017/mongoDB', {
+// using Atlas
+mongoose.connect('mongodb+srv://semana:semana@cluster0-krc4r.mongodb.net/test?retryWrites=true&w=majority', {
     useNewUrlParser: true,
 });
+
+// using local server (develoopment only)
+// mongoose.connect('mongodb://localhost:27017/mongoDB', {
+//     useNewUrlParser: true,
+// });
 
 app.use(express.urlencoded());
 app.use(require('./routes'));

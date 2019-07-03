@@ -4,7 +4,11 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon src/index.js"
+    "dev": "nodemon src/index.js",
+    "start": "node src/index.js"
+  },
+  "engines": {
+    "node": "12.x"
   },
   "dependencies": {
     "express": "^4.17.1",
