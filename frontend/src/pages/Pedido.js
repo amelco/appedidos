@@ -10,6 +10,8 @@ class Pedido extends Component {
         pedidos: [],
     }
 
+    textoEntregue = "Listar entregues";
+
     async componentDidMount() {
         const response = await api.get('listPedidos');
 
@@ -21,10 +23,23 @@ class Pedido extends Component {
         await api.post(`/listPedidos/${idPedido}/entregar`);
     }
 
+    async handleListEntregues(txtEntregue) {
+        var response;
+        if (txtEntregue == "Listar entregues") {
+            response = await api.get('/listPedidos?ent=T');
+            this.textoEntregue = "Listar não-entregues";
+        } else {
+            response = await api.get('/listPedidos');
+            this.textoEntregue = "Listar entregues";
+        }
+        this.setState({ pedidos: response.data });
+    }
+
     render() {
         return (
             <section id='lista-pedidos'>
                 <div id='sort-list'>
+                    <button type="button" onClick={() => this.handleListEntregues(this.textoEntregue)}>{this.textoEntregue}</button>
                 </div>
                 { this.state.pedidos.map(pedido => (
                     <article key={pedido._id}>
