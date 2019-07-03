@@ -18,7 +18,7 @@ class Pedido extends Component {
 
     // alternative: async handleEntrega = idPedido => {}
     async handleEntrega(idPedido) {
-        api.post(`/listPedidos/${idPedido}/entregar`);
+        await api.post(`/listPedidos/${idPedido}/entregar`);
     }
 
     render() {

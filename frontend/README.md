@@ -871,6 +871,31 @@ Temos um objeto pronto pra ser salvo no banco de dados Mongo.
 A API será utilizada então devemos importar o arquivo `service/api.js` no arquivo `New.js`.
 
 ```js
+...
 import api from '../services/api';
+...
 ```
 
+No módulo `axios`, o método `post()` pede os argumentos *rota* e *dados*. A rota é `addPedido` e os dados são os do formulário. Vamos criar um objeto `data` para inserir os dados do formulário no formato *Form URL Encoded*:
+ 
+ ```js
+handleSubmit = async e => {
+    e.preventDefault();
+
+    const data = new URLSearchParams();
+    
+    data.append('cliente', this.state.cliente);
+    data.append('produto', this.state.produto);
+    data.append('entrega', this.state.entrega);
+
+    await api.post('addPedido', data);
+    
+    this.props.history.push('/');
+}
+ ```
+
+ > Após a inserção pelo método post do axios (`api.post()`), redirecionamos o usuário para a rota (`/`) que é a lista de pedidos (`this.props.history.push('/')`).
+
+## Utilizando WebSockets
+
+Podemos utilizar o WebSockets para que a página seja automaticamente atualizada sempre que ocorra uma mudança (inserção, alteração) dos pedidos, sem a necessidade do usuário clicar no botao *refresh* do navegador.
