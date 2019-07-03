@@ -16,6 +16,7 @@ class Pedido extends Component {
         this.setState({ pedidos: response.data });
     }
 
+    // alternative: async handleEntrega = idPedido => {}
     async handleEntrega(idPedido) {
         api.post(`/listPedidos/${idPedido}/entregar`);
     }
