@@ -23,4 +23,6 @@ mongoose.connect('mongodb+srv://semana:semana@cluster0-krc4r.mongodb.net/test?re
 app.use(express.urlencoded());
 app.use(require('./routes'));
 
+const port = process.env.port || 3333;
+
 app.listen(3333);
