@@ -1,7 +1,30 @@
-# Frontend para a API **Appedidos**
+# Appedidos REST API - Backend
 
 O resultado final do (backend + frotend) está disponível em:
 [https://fierce-peak-43734.herokuapp.com/](https://fierce-peak-43734.herokuapp.com/).
+
+
+## Instalação
+
+1. `yarn`
+2. `cp .env.example .env`
+3. `yarn run dev`
+4. Abra `http://localhost:3333`
+
+## Requerimentos
+
+**mongodb**
+
+Esse projeto usa mongodb, e você pode usar o docker-compose para rodar ele usando o seguinte comando:
+
+`docker-compose up`
+
+**yarn**
+
+
+## Licença
+
+MIT
 
 # Pequeno manual introdutório do NodeJS (RESTfull API's)
 
