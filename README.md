@@ -6,9 +6,9 @@ O resultado final do (backend + frotend) está disponível em:
 
 ## Instalação
 
-1. `yarn`
+1. `npm install`
 2. `cp .env.example .env`
-3. `yarn run dev`
+3. `npm run dev`
 4. Abra `http://localhost:3333`
 
 ## Requerimentos
@@ -19,7 +19,7 @@ Esse projeto usa mongodb, e você pode usar o docker-compose para rodar ele usan
 
 `docker-compose up`
 
-**yarn**
+**npm**
 
 
 ## Licença
