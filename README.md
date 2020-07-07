@@ -15,9 +15,11 @@ O resultado final do (backend + frotend) está disponível em:
 
 **mongodb**
 
-Esse projeto usa mongodb, e você pode usar o docker-compose para rodar ele usando o seguinte comando:
+Esse projeto usa mongodb, e você pode usar o docker-compose para configurar o que for necessário usando o seguinte comando:
 
 `docker-compose up`
+
+*OBS.: O docker daemon (`dockerd`) deve estar em execução.*
 
 **npm**
 
